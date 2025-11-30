@@ -1,0 +1,63 @@
+# Smart Financial Advisor - Requirements
+
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+jinja2==3.1.2
+
+# Data Processing
+pandas==2.1.3
+numpy==1.26.2
+yfinance==0.2.32
+pandas-datareader==0.10.0
+
+# Machine Learning
+scikit-learn==1.3.2
+tensorflow==2.15.0
+torch==2.1.1
+xgboost==2.0.2
+
+# Deep Learning for Time Series
+prophet==1.1.5
+
+# NLP & Sentiment Analysis
+transformers==4.35.2
+nltk==3.8.1
+vaderSentiment==3.3.2
+textblob==0.17.1
+
+# News & Data APIs
+newsapi-python==0.2.7
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.0
+plotly==5.18.0
+
+# Database
+sqlalchemy==2.0.23
+pymongo==4.6.0
+
+# Utilities
+python-dotenv==1.0.0
+pydantic==2.5.2
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Testing
+pytest==7.4.3
+httpx==0.25.2
+
+# Async
+aiohttp==3.9.1
+asyncio==3.4.3
+
+# Financial Calculations
+ta==0.11.0
+pandas-ta==0.3.14b0
+
+# Caching
+redis==5.0.1

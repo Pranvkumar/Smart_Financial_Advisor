@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Financial Advisor - AI-Powered Stock Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>💹 Smart Financial Advisor</h1>
+                <p>AI-Powered Stock Prediction & Portfolio Optimization</p>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-tab="prediction">Prediction</button>
+                <button class="nav-btn" data-tab="sentiment">Sentiment</button>
+                <button class="nav-btn" data-tab="portfolio">Portfolio</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Prediction Tab -->
+        <section id="prediction-tab" class="tab-content active">
+            <div class="container">
+                <div class="search-section">
+                    <h2>Stock Price Prediction</h2>
+                    <div class="search-box">
+                        <input type="text" id="stockSymbol" placeholder="Enter stock symbol (e.g., AAPL)" />
+                        <input type="number" id="predictionDays" placeholder="Days" value="30" min="1" max="365" />
+                        <button id="predictBtn" class="btn-primary">Predict</button>
+                    </div>
+                </div>
+
+                <div id="predictionResults" class="results-section" style="display: none;">
+                    <!-- Stock Info Card -->
+                    <div class="card">
+                        <div class="stock-header">
+                            <div>
+                                <h3 id="stockName">--</h3>
+                                <p class="stock-symbol" id="stockSymbolDisplay">--</p>
+                            </div>
+                            <div class="stock-price">
+                                <span class="label">Current Price</span>
+                                <span class="price" id="currentPrice">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="stock-info-grid">
+                            <div class="info-item">
+                                <span class="label">Market Cap</span>
+                                <span id="marketCap">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">PE Ratio</span>
+                                <span id="peRatio">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Volume</span>
+                                <span id="volume">--</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Beta</span>
+                                <span id="beta">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prediction Card -->
+                    <div class="card">
+                        <h3>Prediction Summary</h3>
+                        <div class="prediction-summary">
+                            <div class="prediction-item">
+                                <span class="label">Predicted Price</span>
+                                <span class="value" id="predictedPrice">$0.00</span>
+                            </div>
+                            <div class="prediction-item">
+                                <span class="label">Change</span>
+                                <span class="value" id="priceChange">$0.00 (0.00%)</span>
+                            </div>
+                            <div class="prediction-item">
+                                <span class="label">Direction</span>
+                                <span class="badge" id="direction">--</span>
+                            </div>
+                            <div class="prediction-item">
+                                <span class="label">Recommendation</span>
+                                <span class="badge" id="recommendation">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="card">
+                        <h3>Price Prediction Chart</h3>
+                        <canvas id="predictionChart"></canvas>
+                    </div>
+
+                    <!-- Model Metrics -->
+                    <div class="card" id="metricsCard" style="display: none;">
+                        <h3>Model Performance</h3>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <span class="label">Test RMSE</span>
+                                <span id="testRmse">--</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="label">Test MAE</span>
+                                <span id="testMae">--</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="label">R² Score</span>
+                                <span id="r2Score">--</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="label">Confidence</span>
+                                <span id="confidence">95%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sentiment Tab -->
+        <section id="sentiment-tab" class="tab-content">
+            <div class="container">
+                <div class="search-section">
+                    <h2>Market Sentiment Analysis</h2>
+                    <div class="search-box">
+                        <input type="text" id="sentimentSymbol" placeholder="Enter stock symbol" />
+                        <button id="analyzeSentimentBtn" class="btn-primary">Analyze</button>
+                    </div>
+                </div>
+
+                <div id="sentimentResults" class="results-section" style="display: none;">
+                    <!-- Sentiment Overview -->
+                    <div class="card">
+                        <h3>Sentiment Overview</h3>
+                        <div class="sentiment-overview">
+                            <div class="sentiment-score">
+                                <div class="score-circle" id="sentimentCircle">
+                                    <span id="sentimentScore">0.00</span>
+                                </div>
+                                <p id="sentimentLabel">Neutral</p>
+                            </div>
+                            <div class="sentiment-details">
+                                <div class="detail-item">
+                                    <span class="label">Confidence</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" id="sentimentConfidence"></div>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Articles Analyzed</span>
+                                    <span id="articlesAnalyzed">0</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Impact</span>
+                                    <span id="sentimentImpact">--</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label">Signal</span>
+                                    <span class="badge" id="sentimentSignal">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment Breakdown -->
+                    <div class="card">
+                        <h3>Sentiment Distribution</h3>
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+
+                    <!-- News Articles -->
+                    <div class="card">
+                        <h3>Recent News</h3>
+                        <div id="newsArticles" class="news-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Tab -->
+        <section id="portfolio-tab" class="tab-content">
+            <div class="container">
+                <div class="search-section">
+                    <h2>Portfolio Optimization</h2>
+                    <div class="portfolio-input">
+                        <input type="text" id="portfolioSymbols" placeholder="Enter symbols (comma-separated, e.g., AAPL,GOOGL,MSFT)" />
+                        <select id="optimizationMethod">
+                            <option value="sharpe">Maximize Sharpe Ratio</option>
+                            <option value="min_volatility">Minimize Volatility</option>
+                        </select>
+                        <input type="number" id="portfolioValue" placeholder="Portfolio Value" value="100000" />
+                        <button id="optimizeBtn" class="btn-primary">Optimize</button>
+                    </div>
+                </div>
+
+                <div id="portfolioResults" class="results-section" style="display: none;">
+                    <!-- Portfolio Metrics -->
+                    <div class="card">
+                        <h3>Portfolio Metrics</h3>
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <span class="label">Expected Return</span>
+                                <span id="portfolioReturn">--</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="label">Volatility</span>
+                                <span id="portfolioVolatility">--</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="label">Sharpe Ratio</span>
+                                <span id="portfolioSharpe">--</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="label">Diversification</span>
+                                <span id="diversificationScore">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Allocation Chart -->
+                    <div class="card">
+                        <h3>Optimal Allocation</h3>
+                        <canvas id="allocationChart"></canvas>
+                    </div>
+
+                    <!-- Allocation Table -->
+                    <div class="card">
+                        <h3>Asset Allocation</h3>
+                        <div id="allocationTable" class="table-container"></div>
+                    </div>
+
+                    <!-- Risk Analysis -->
+                    <div class="card">
+                        <h3>Risk Analysis</h3>
+                        <div id="riskAnalysis" class="risk-grid"></div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="card">
+                        <h3>Recommendations</h3>
+                        <div id="recommendations" class="recommendations-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Smart Financial Advisor | Powered by AI & Machine Learning</p>
+        <p>Created by <a href="https://github.com/Pranvkumar" target="_blank">Pranvkumar</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
