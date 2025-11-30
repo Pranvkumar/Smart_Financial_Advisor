@@ -42,10 +42,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static files
+# Mount static files - serve from root directory
+root_path = Path(__file__).parent.parent
 frontend_path = Path(__file__).parent.parent / "frontend"
-if frontend_path.exists():
-    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+
+# Serve root directory files (index.html, script.js, style.css in root)
+if root_path.exists():
+    app.mount("/static", StaticFiles(directory=str(root_path), html=True), name="static")
 
 # Include routers
 app.include_router(prediction.router)
@@ -70,12 +73,30 @@ async def shutdown_event():
 async def root():
     """Serve the main dashboard"""
     try:
-        html_file = frontend_path / "index.html"
+        html_file = root_path / "index.html"
         if html_file.exists():
             return HTMLResponse(content=html_file.read_text(), status_code=200)
         return {"message": "Smart Financial Advisor API", "version": "1.0.0"}
     except Exception:
         return {"message": "Smart Financial Advisor API", "version": "1.0.0"}
+
+
+@app.get("/script.js")
+async def serve_js():
+    """Serve JavaScript file"""
+    js_file = root_path / "script.js"
+    if js_file.exists():
+        return HTMLResponse(content=js_file.read_text(), media_type="application/javascript")
+    return HTMLResponse(content="", status_code=404)
+
+
+@app.get("/style.css")
+async def serve_css():
+    """Serve CSS file"""
+    css_file = root_path / "style.css"
+    if css_file.exists():
+        return HTMLResponse(content=css_file.read_text(), media_type="text/css")
+    return HTMLResponse(content="", status_code=404)
 
 
 @app.get("/health")

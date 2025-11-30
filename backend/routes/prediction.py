@@ -11,13 +11,13 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from models.lstm_predictor import StockPricePredictor
-from data.stock_data import StockDataFetcher
+from data.finnhub_data import FinnhubDataFetcher
 
 router = APIRouter(prefix="/api/predict", tags=["Prediction"])
 
 # Initialize services
 predictor = StockPricePredictor()
-fetcher = StockDataFetcher()
+fetcher = FinnhubDataFetcher()
 
 # Feature list for training
 FEATURE_COLUMNS = [
@@ -47,37 +47,10 @@ async def predict_stock(
     - **retrain**: Force model retraining
     """
     try:
-        # Fetch stock data
-        try:
-            df = fetcher.fetch_stock_data(symbol)
-            df = fetcher.add_technical_indicators(df)
-            stock_info = fetcher.get_stock_info(symbol)
-        except Exception as e:
-            # If Yahoo Finance fails, use mock data for demo
-            import pandas as pd
-            import numpy as np
-            from datetime import datetime, timedelta
-            
-            # Generate mock data
-            dates = pd.date_range(end=datetime.now(), periods=500, freq='D')
-            base_price = 150.0
-            prices = base_price + np.cumsum(np.random.randn(500) * 2)
-            volumes = np.random.randint(50000000, 150000000, 500)
-            
-            df = pd.DataFrame({
-                'Close': prices,
-                'Open': prices * 0.99,
-                'High': prices * 1.01,
-                'Low': prices * 0.98,
-                'Volume': volumes
-            }, index=dates)
-            
-            df = fetcher.add_technical_indicators(df)
-            stock_info = {
-                'name': symbol.upper() + ' Corporation',
-                'sector': 'Technology',
-                'market_cap': '2.5T'
-            }
+        # Fetch stock data from Finnhub
+        df = fetcher.fetch_stock_data(symbol)
+        df = fetcher.add_technical_indicators(df)
+        stock_info = fetcher.get_stock_info(symbol)
         
         # Train or load model
         if retrain or predictor.model is None:

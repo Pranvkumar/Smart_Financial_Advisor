@@ -11,13 +11,13 @@ import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from models.portfolio_optimizer import PortfolioOptimizer
-from data.stock_data import StockDataFetcher
+from data.finnhub_data import FinnhubDataFetcher
 
 router = APIRouter(prefix="/api/portfolio", tags=["Portfolio"])
 
 # Initialize services
 optimizer = PortfolioOptimizer()
-fetcher = StockDataFetcher()
+fetcher = FinnhubDataFetcher()
 
 
 class PortfolioRequest(BaseModel):
@@ -42,21 +42,8 @@ async def optimize_portfolio(request: PortfolioRequest):
     - **portfolio_value**: Total portfolio value
     """
     try:
-        # Fetch data for all symbols
-        try:
-            stock_data = fetcher.get_multiple_stocks(request.symbols)
-        except:
-            # Mock data if API fails
-            import numpy as np
-            from datetime import datetime, timedelta
-            dates = pd.date_range(end=datetime.now(), periods=500, freq='D')
-            stock_data = {}
-            for symbol in request.symbols:
-                base_price = np.random.uniform(50, 300)
-                prices = base_price + np.cumsum(np.random.randn(500) * 2)
-                stock_data[symbol] = pd.DataFrame({
-                    'Close': prices
-                }, index=dates)
+        # Fetch data for all symbols from Finnhub
+        stock_data = fetcher.get_multiple_stocks(request.symbols)
         
         # Create price dataframe
         prices = pd.DataFrame()
