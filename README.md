@@ -1,86 +1,140 @@
-# 🚀 Smart Financial Advisor & Stock Predictor
+# 🚀 Smart Financial Advisor
 
-> **AI-powered financial advisory system with stock predictions, portfolio optimization, and sentiment analysis**
+> **AI-powered financial analysis with real-time stock predictions, portfolio optimization, and market sentiment analysis**
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.1.1-red.svg)](https://pytorch.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.9.1-red.svg)](https://pytorch.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green.svg)](https://fastapi.tiangolo.com/)
+[![Finnhub](https://img.shields.io/badge/Finnhub-API-orange.svg)](https://finnhub.io/)
 
-## 📺 **Demo Successfully Completed!**
+## 🌐 **Live Demo**
 
-✅ **Portfolio Optimization:** Optimized $10,000 portfolio (Sharpe Ratio: 3.02)  
-✅ **Sentiment Analysis:** Analyzed 5 news headlines with trading signals  
-✅ **Technical Indicators:** Calculated 20+ indicators (RSI, MACD, Bollinger Bands)  
-✅ **Risk Analysis:** Value at Risk calculations (95% & 99% confidence)
-
-**[View Full Demo Results →](DEMO_SUMMARY.md)**
+**[🔗 Try it Live](https://pranvkumar.github.io/Smart_Financial_Advisor/)** | **[📂 View Source](https://github.com/Pranvkumar/Smart_Financial_Advisor)**
 
 ---
 
-An AI-powered financial advisory system that provides stock price predictions, portfolio optimization, risk assessment, and real-time market sentiment analysis.
-
-## 🎯 Features
-
-### 1. **Stock Price Prediction**
-- LSTM-based time series forecasting
-- Multiple technical indicators (RSI, MACD, Bollinger Bands)
-- Confidence intervals for predictions
-- Historical accuracy tracking
-
-### 2. **Sentiment Analysis**
-- Real-time news sentiment from multiple sources
-- Twitter/social media sentiment tracking
-- Impact score on stock movements
-- Sentiment-adjusted predictions
-
-### 3. **Portfolio Optimization**
-- Modern Portfolio Theory implementation
-- Risk-return optimization
-- Diversification recommendations
-- Rebalancing suggestions
-
-### 4. **Risk Assessment**
-- Value at Risk (VaR) calculation
-- Beta analysis
-- Volatility forecasting
-- Correlation analysis
-
-### 5. **Trading Strategy Backtesting**
-- Test strategies on historical data
-- Performance metrics (Sharpe ratio, max drawdown)
-- Comparison with buy-and-hold
-- Custom strategy builder
-
-## 🚀 Quick Start
-
-### Installation
+## ⚡ Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/Pranvkumar/Smart_Financial_Advisor.git
 cd Smart_Financial_Advisor
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
 # Install dependencies
 pip install -r requirements.txt
+
+# Add your Finnhub API key to .env
+echo "FINNHUB_API_KEY=your_key_here" > .env
+
+# Run the server
+cd backend
+python main.py
 ```
 
-### Configuration
+Open **http://localhost:8000** and start analyzing stocks!
 
-Create a `.env` file:
+---
 
-```env
-# API Keys
-ALPHA_VANTAGE_API_KEY=your_key_here
-NEWS_API_KEY=your_key_here
-FINNHUB_API_KEY=your_key_here
+## 🎯 Features
 
-# Database
-MONGODB_URI=mongodb://localhost:27017/
-DATABASE_NAME=financial_advisor
+### 1. **📈 Stock Price Prediction**
+- **LSTM Neural Network** with 38,977 trainable parameters
+- Real-time data from **Finnhub API**
+- **24 Technical Indicators** (SMA, EMA, RSI, MACD, Bollinger Bands, ATR, etc.)
+- 30-day price forecasts with confidence intervals
+- Interactive Chart.js visualizations
+
+### 2. **💬 Sentiment Analysis**
+- VADER NLP sentiment scoring
+- Market sentiment impact assessment
+- Trading signal generation (Buy/Sell/Hold)
+- News article aggregation
+
+### 3. **💼 Portfolio Optimization**
+- **Modern Portfolio Theory (MPT)** implementation
+- Sharpe ratio maximization
+- Risk-return optimization
+- Diversification scoring (0-100)
+- Value at Risk (VaR) calculations (95% & 99% confidence)
+- Multi-stock allocation recommendations
+
+### 4. **🎨 Interactive Dashboard**
+- Real-time stock data display
+- Company profiles (name, sector, market cap)
+- Interactive prediction charts
+- Responsive design
+- Three-tab interface (Prediction, Sentiment, Portfolio)
+
+
+## 🛠️ Tech Stack
+
+**Backend:**
+- FastAPI (Python web framework)
+- PyTorch (LSTM neural network)
+- Finnhub API (real-time stock data)
+- pandas, numpy (data processing)
+
+**Frontend:**
+- HTML5, CSS3, JavaScript (ES6+)
+- Chart.js (interactive visualizations)
+- Responsive design
+
+**Machine Learning:**
+- LSTM (Long Short-Term Memory) networks
+- VADER sentiment analysis
+- Modern Portfolio Theory (MPT)
+- Technical indicator calculations
+
+---
+
+## 📊 Example Results
+
+**Stock: AAPL (Apple Inc)**
+- Current Price: $278.85
+- 30-Day Prediction: $297.83
+- Expected Change: +6.81% ↑
+- Recommendation: **Buy**
+
+**Portfolio Optimization (AAPL, GOOGL, MSFT):**
+- Expected Annual Return: 18.5%
+- Annual Volatility: 12.3%
+- Sharpe Ratio: 1.50
+- Diversification Score: 75/100
+
+---
+
+## 🚀 API Endpoints
+
+```
+GET  /api/predict/{symbol}?days=30     # Stock prediction
+GET  /api/sentiment/{symbol}           # Sentiment analysis  
+POST /api/portfolio/optimize           # Portfolio optimization
+GET  /health                           # Health check
+GET  /docs                             # Interactive API docs
+```
+
+---
+
+## 📝 License
+
+MIT License - feel free to use this project for learning and development!
+
+---
+
+## 👨‍💻 Author
+
+**Pranvkumar Suhas Kshirsagar**
+- GitHub: [@Pranvkumar](https://github.com/Pranvkumar)
+- LinkedIn: [Pranvkumar Kshirsagar](https://www.linkedin.com/in/pranvkumar-suhas-kshirsagar-348b04325/)
+- Email: pranavkshirsagar.409@gmail.com
+
+---
+
+## ⭐ Show Your Support
+
+If you find this project helpful, please give it a ⭐ on GitHub!
+
+**[View Live Demo →](https://pranvkumar.github.io/Smart_Financial_Advisor/)**
 
 # Redis Cache
 REDIS_HOST=localhost
