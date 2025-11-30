@@ -2,47 +2,146 @@
 
 const API_BASE_URL = 'http://localhost:8000';
 
-// Tab Navigation
-document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        // Update active button
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Show corresponding tab
-        const tabName = btn.dataset.tab;
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.getElementById(`${tabName}-tab`).classList.add('active');
-    });
-});
+console.log('Script loaded, waiting for DOM...');
 
-// Prediction Tab
-document.getElementById('predictBtn').addEventListener('click', async () => {
-    const symbol = document.getElementById('stockSymbol').value.toUpperCase().trim();
-    const days = parseInt(document.getElementById('predictionDays').value);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing...');
     
-    if (!symbol) {
-        alert('Please enter a stock symbol');
+    // Tab Navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            console.log('Tab clicked:', btn.dataset.tab);
+            // Update active button
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Show corresponding tab
+            const tabName = btn.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        });
+    });
+
+    // Prediction Tab
+    const predictBtn = document.getElementById('predictBtn');
+    if (!predictBtn) {
+        console.error('Predict button not found!');
         return;
     }
     
-    showLoading(true);
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/predict/${symbol}?days=${days}`);
-        const data = await response.json();
+    console.log('Predict button found, adding listener...');
+    predictBtn.addEventListener('click', async () => {
+        console.log('Predict button clicked!');
+        const symbol = document.getElementById('stockSymbol').value.toUpperCase().trim();
+        const days = parseInt(document.getElementById('predictionDays').value);
         
-        if (response.ok) {
-            displayPredictionResults(data);
-        } else {
-            alert(`Error: ${data.detail}`);
+        console.log('Symbol:', symbol, 'Days:', days);
+        
+        if (!symbol) {
+            alert('Please enter a stock symbol');
+            return;
         }
-    } catch (error) {
-        alert(`Error: ${error.message}`);
-    } finally {
-        showLoading(false);
+        
+        showLoading(true);
+    
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/predict/${symbol}?days=${days}`);
+            const data = await response.json();
+            
+            console.log('API Response:', data);
+            
+            if (response.ok) {
+                displayPredictionResults(data);
+            } else {
+                alert(`Error: ${data.detail}`);
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            alert(`Error: ${error.message}`);
+        } finally {
+            showLoading(false);
+        }
+    });
+
+    // Sentiment Tab
+    const analyzeSentimentBtn = document.getElementById('analyzeSentimentBtn');
+    if (analyzeSentimentBtn) {
+        console.log('Sentiment button found, adding listener...');
+        analyzeSentimentBtn.addEventListener('click', async () => {
+            console.log('Analyze button clicked!');
+            const symbol = document.getElementById('sentimentSymbol').value.toUpperCase().trim();
+            
+            if (!symbol) {
+                alert('Please enter a stock symbol');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/sentiment/${symbol}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displaySentimentResults(data);
+                } else {
+                    alert(`Error: ${data.detail}`);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        });
     }
-});
+
+    // Portfolio Tab
+    const optimizeBtn = document.getElementById('optimizeBtn');
+    if (optimizeBtn) {
+        console.log('Optimize button found, adding listener...');
+        optimizeBtn.addEventListener('click', async () => {
+            console.log('Optimize button clicked!');
+            const symbols = document.getElementById('portfolioSymbols').value.toUpperCase().trim().split(',');
+            const method = document.getElementById('optimizationMethod').value;
+            const value = parseFloat(document.getElementById('portfolioValue').value);
+            
+            if (symbols.length < 2) {
+                alert('Please enter at least 2 stock symbols (comma-separated)');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/portfolio/optimize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        symbols: symbols.map(s => s.trim()),
+                        optimization_method: method,
+                        portfolio_value: value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayPortfolioResults(data);
+                } else {
+                    alert(`Error: ${data.detail}`);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        });
+    }
+
+    console.log('All event listeners initialized!');
+});  // End of DOMContentLoaded
+
+// Helper Functions (outside DOMContentLoaded)
 
 function displayPredictionResults(data) {
     // Show results section
@@ -173,32 +272,7 @@ function drawPredictionChart(data) {
     });
 }
 
-// Sentiment Tab
-document.getElementById('analyzeSentimentBtn').addEventListener('click', async () => {
-    const symbol = document.getElementById('sentimentSymbol').value.toUpperCase().trim();
-    
-    if (!symbol) {
-        alert('Please enter a stock symbol');
-        return;
-    }
-    
-    showLoading(true);
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/sentiment/${symbol}`);
-        const data = await response.json();
-        
-        if (response.ok) {
-            displaySentimentResults(data);
-        } else {
-            alert(`Error: ${data.detail}`);
-        }
-    } catch (error) {
-        alert(`Error: ${error.message}`);
-    } finally {
-        showLoading(false);
-    }
-});
+// Display Functions
 
 function displaySentimentResults(data) {
     document.getElementById('sentimentResults').style.display = 'block';
@@ -269,45 +343,7 @@ function displayNewsArticles(articles) {
     });
 }
 
-// Portfolio Tab
-document.getElementById('optimizeBtn').addEventListener('click', async () => {
-    const symbolsInput = document.getElementById('portfolioSymbols').value.trim();
-    const method = document.getElementById('optimizationMethod').value;
-    const value = parseFloat(document.getElementById('portfolioValue').value);
-    
-    if (!symbolsInput) {
-        alert('Please enter stock symbols');
-        return;
-    }
-    
-    const symbols = symbolsInput.split(',').map(s => s.trim().toUpperCase());
-    
-    showLoading(true);
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/portfolio/optimize`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                symbols: symbols,
-                optimization_method: method,
-                portfolio_value: value
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            displayPortfolioResults(data);
-        } else {
-            alert(`Error: ${data.detail}`);
-        }
-    } catch (error) {
-        alert(`Error: ${error.message}`);
-    } finally {
-        showLoading(false);
-    }
-});
+// Display Functions
 
 function displayPortfolioResults(data) {
     document.getElementById('portfolioResults').style.display = 'block';

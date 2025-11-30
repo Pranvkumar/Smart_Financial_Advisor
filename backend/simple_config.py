@@ -7,6 +7,7 @@ class Settings:
     # API Configuration
     API_HOST = "0.0.0.0"
     API_PORT = 8000
+    API_RELOAD = True
     DEBUG = True
     LOG_LEVEL = "INFO"
     
